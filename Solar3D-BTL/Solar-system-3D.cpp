@@ -101,7 +101,7 @@ static void Animate(void)
     {
         // Update the animation state
         HourOfDay += AnimateIncrement;
-        DayOfYear += AnimateIncrement / 24.0;  // 48 gio chia 24 = 2 ngay
+        DayOfYear += AnimateIncrement / 24.0;  // Ex: 48 hour <=> 2 days
 
         HourOfDay = HourOfDay - ((int)(HourOfDay / 24)) * 24;
         DayOfYear = DayOfYear - ((int)(DayOfYear / 365)) * 365;
@@ -117,11 +117,10 @@ static void Animate(void)
     // (rotate the model's plane about the x axis by fifteen degrees)
     glRotatef(15.0, 1.0, 0.0, 0.0);
 
-    // Draw the sun	-- as a yellow, wireframe sphere
+    // Draw the sun	-- as a yellow, solid sphere
     glPushMatrix();
-    // glColor3f(1.0, 1.0, 0.0);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_sun);
-    glRotatef(360.0 * DayOfYear / 27.0, 0.0, 1.0, 0.0); // Mat troi quay quanh chinh no mat khoang 27 ngay neu tinh tu vi tri xich dao
+    glRotatef(360.0 * DayOfYear / 27.0, 0.0, 1.0, 0.0); //The sun orbiting itself takes 27 days at euator
     glutSolidSphere(1.0, 30, 30);
     glPopMatrix();
 
@@ -135,19 +134,19 @@ static void Animate(void)
     // Use HourOfDay to determine its rotation.
     glRotatef(360.0 * HourOfDay / 24.0, 0.0, 1.0, 0.0);
     // Third, draw the earth as a wireframe sphere.
-    // glColor3f(0.2, 0.2, 1.0);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_earth);
     glutSolidSphere(0.4, 25, 25);
     glPopMatrix(); // Restore matrix state
 
     // Draw the moon.
     // Use DayOfYear to control its rotation around the earth
+    glPushMatrix();
     glRotatef(360.0 * 12.5 * DayOfYear / 365.0, 0.0, 1.0, 0.0);
-    //Mat trang quay quanh trai dat mat khoang 27.32 - 29.53 ngay  ==> lay trung binh khoang 12.5 do/ 1 ngay
+    // The moon rotate around the earth takes 27.32 - 29.53 days =>>  12,5 degrees/day
     glTranslatef(0.7, 0.0, 0.0);
-    // glColor3f(0.3, 0.7, 0.3);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_moon);
     glutSolidSphere(0.1, 15, 15);
+    glPopMatrix();
 
     // Flush the pipeline, and swap the buffers
     glFlush();
